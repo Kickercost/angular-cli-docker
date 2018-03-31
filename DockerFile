@@ -1,0 +1,14 @@
+FROM mhart/alpine-node:8
+
+WORKDIR /usr/src
+COPY package.json ./
+RUN npm config set user 0 \
+	&& npm config set unsafe-perm true \
+	&& chmod 777 /usr/lib/node_modules/  \
+	&& apk add --no-cache --virtual .gyp \
+        python \
+        make \
+        g++ \
+    && npm install -g @angular/cli@latest --allow-root \
+    && npm install --only=production && rm package.json && rm package-lock.json \
+    && apk del .gyp
